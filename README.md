@@ -19,9 +19,11 @@
 
 ![image](img)
 
-驴车官网：https://donkeycar.cn/
+donkeycar：https://donkeycar.cn/
 
 gym：https://github.com/tawnkramer/gym-donkeycar/releases
+
+paddle：https://github.com/PaddlePaddle/PaddleGAN/blob/develop/docs/zh_CN/install.md
 
 可以打开仿真软件，先选中manual Driving手动控制小车体验一下操作
 
@@ -64,6 +66,9 @@ gym：https://github.com/tawnkramer/gym-donkeycar/releases
 
 在固定油门值为0.2的情况下，根据两条车道线计算转向角度控制小车
 
+```text
+
+```
 ![Snipaste_2026-05-24_11-04-18.png](images/Snipaste_2026-05-24_11-04-18.png)
 
 注意仿真软件每次生成的赛道是随机的，如果赛道存在十字路口或者过于复杂可能出现检测失败、冲出赛道的情况
@@ -73,10 +78,69 @@ gym：https://github.com/tawnkramer/gym-donkeycar/releases
 
 #### 数据采集
 
+根据上一节分析图像和自动驾驶的代码，调整一下作为本节的数据集，每张图像命名为“图像帧编号_转向角度.jpg”
 
+![Snipaste_2026-05-24_19-35-47.png](images/Snipaste_2026-05-24_19-35-47.png)
 
+建议收集时稍微看一下运行过程，不要采集包含十字路口的图像
 
+![Snipaste_2026-05-24_19-37-11.png](images/Snipaste_2026-05-24_19-37-11.png)
 
+按照0.8的比例随机拆分出训练集（8000张）和验证集（2000张），以train.txt为例数据格式如下
 
+```text
+dataset/6023_-0.2000.jpg -0.2000
+dataset/1745_0.0000.jpg 0.0000
+dataset/5374_0.0222.jpg 0.0222
+dataset/2009_-0.1333.jpg -0.1333
+dataset/8120_0.0222.jpg 0.0222
+```
 
+#### 模型训练
 
+准备数据、搭建模型、损失函数，然后就是训练（因为本项目数据量较小，可以使用CPU进行训练） ，或者使用飞桨社区的算力卡进行GPU训练
+
+安装visualdl查看训练过程，打开浏览器访问 http://localhost:8040
+
+```text
+(opencv_drive_car) D:\workspace\opencv_drive_car>visualdl --logdir deeplearning_drive/log
+```
+
+![MSELoss.png](images/MSELoss.png)
+
+#### 模型验证
+
+评估训练好的模型性能
+
+![Snipaste_2026-05-24_20-33-04.png](images/Snipaste_2026-05-24_20-33-04.png)
+
+#### 模型集成
+
+使用模型，控制小车执行动作，部分执行日志如下
+
+```text
+starting DonkeyGym env
+Setting default: start_delay 5.0
+Setting default: max_cte 8.0
+Setting default: frame_skip 1
+Setting default: cam_resolution (120, 160, 3)
+Setting default: log_level 20
+Setting default: host localhost
+Setting default: steer_limit 1.0
+Setting default: throttle_min 0.0
+Setting default: throttle_max 1.0
+donkey subprocess started
+loading scene generated_road
+当前转向角度： -0.040544167
+当前转向角度： -0.03807132
+当前转向角度： -0.034253404
+... ...
+当前转向角度： 0.008305684
+当前转向角度： 0.008212611
+当前转向角度： 0.020580843
+当前转向角度： 0.010675237
+当前转向角度： 0.048293248
+closing donkey sim subprocess
+```
+
+![Snipaste_2026-05-24_20-37-27.png](images/Snipaste_2026-05-24_20-37-27.png)
