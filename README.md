@@ -3,21 +3,69 @@
 #### 写在前面
 
 首先，本项目来源于《深度学习与图像处理（PaddlePaddle版）》（钱彬 著）
+![book_picture.jpg](images/book_picture.jpg)
 
-然后，复现和优化该项目以及撰写文档让我获益匪浅，感谢钱彬老师的分享
+然后，复现和优化该项目让我获益匪浅，十分感谢钱彬老师的分享
 
-最后，如有疑问可以添加书籍作者的交流群 820106877，欢迎各位大佬的加入
+最后，如有疑问可以添加书籍作者的交流群 820106877，以及 871302808（B站UP幽蓝伊梦的学习交流群）欢迎各位大佬的加入
 
 #### 项目简介
 
-0可以分为感知（检测车道线）和动作规划（操控转向）两部分
-添加了较为详细的注释，使得零基础同学也可以无障碍学习
+项目整体可以分成两个部分：
+前一部分使用opencv分析图像，针对仿真软件中的反馈图像进行感知（检测车道线）和动作规划（操控转向），
+后一部分使用paddle搭建网络模型，使用10,000张基于opencv的处理图像训练模型，并进行一定的可视化呈现
+
+代码中添加了较为详细的注释，以及部分代码优化，使得零基础同学也可以无障碍学习，虽然概率很低，但希望能够帮助到某位同学
 
 #### 环境准备
 
 我使用的是conda环境，相关具体操作请自行搜索，项目整体结构如下：
 
-![image](img)
+```text
+├── deeplearning_drive
+│   ├── dataset
+│   │   ├── 1000_-0.2222.jpg
+│   │   ├── 1001_-0.2667.jpg
+│   │   ├── 1002_-0.2444.jpg
+│   │   ├── 1003_-0.2444.jpg
+│   │   ├── 1004_-0.2667.jpg
+│   │   ├── 1005_-0.2444.jpg
+│   │   ├── ... ... 
+│   ├── log
+│   │   └── vdlrecords.1779182184.log
+│   ├── model
+│   │   ├── best_model.pdparams
+│   │   ├── last_model.pdparams
+│   │   └── model.pdparams
+│   ├── collect_data.py
+│   ├── data_loader.py
+│   ├── deep_drive.py
+│   ├── generate_list.py
+│   ├── img_analysis.py
+│   ├── model.py
+│   ├── train.py
+│   ├── train.txt
+│   ├── unitylog.txt
+│   ├── val.py
+│   └── val.txt
+├── DonkeySimWin
+│   ├── ... ...
+├── gym-donkeycar
+│   ├── ... ...
+├── images
+│   ├── book_picture.jpg
+│   ├── MSELoss.png
+│   ├── ... ...
+├── opencv_drive_car
+│   ├── output
+│   │   ├── test_drive.jpg
+│   │   ├── ... ...
+│   ├── auto_drive.py
+│   ├── img_analysis.py
+│   ├── test_drive.py
+│   └── unitylog.txt
+├── README.md
+```
 
 donkeycar：https://donkeycar.cn/
 
@@ -66,9 +114,6 @@ paddle：https://github.com/PaddlePaddle/PaddleGAN/blob/develop/docs/zh_CN/insta
 
 在固定油门值为0.2的情况下，根据两条车道线计算转向角度控制小车
 
-```text
-
-```
 ![Snipaste_2026-05-24_11-04-18.png](images/Snipaste_2026-05-24_11-04-18.png)
 
 注意仿真软件每次生成的赛道是随机的，如果赛道存在十字路口或者过于复杂可能出现检测失败、冲出赛道的情况
